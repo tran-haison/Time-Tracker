@@ -1,4 +1,4 @@
-# time_tracker_flutter
+# Time Tracker Flutter
 
 A new Flutter application.
 
