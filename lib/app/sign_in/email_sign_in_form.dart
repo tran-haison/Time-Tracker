@@ -24,6 +24,8 @@ class EmailSignInForm extends StatefulWidget {
 class _EmailSignInFormState extends State<EmailSignInForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
 
   String get _email => _emailController.text;
 
@@ -55,6 +57,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     _passwordController.clear();
   }
 
+  void _emailEditingComplete() {
+    FocusScope.of(context).requestFocus(_passwordFocusNode);
+  }
+
   List<Widget> _buildChildren() {
     final primaryText = _emailSignInFormType == EmailSignInFormType.signIn
         ? "Sign in"
@@ -64,21 +70,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         : "Have an account? Sign in";
 
     return [
-      TextField(
-        controller: _emailController,
-        decoration: InputDecoration(
-          labelText: "Email",
-          hintText: "example@example.com",
-        ),
-      ),
+      _buildEmailTextField(),
       SizedBox(height: 8),
-      TextField(
-        controller: _passwordController,
-        decoration: InputDecoration(
-          labelText: "Password",
-        ),
-        obscureText: true,
-      ),
+      _buildPasswordTextField(),
       SizedBox(height: 8),
       FormSubmitButton(
         text: primaryText,
@@ -90,6 +84,34 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         child: Text(secondaryText),
       ),
     ];
+  }
+
+  Widget _buildPasswordTextField() {
+    return TextField(
+      controller: _passwordController,
+      focusNode: _passwordFocusNode,
+      decoration: InputDecoration(
+        labelText: "Password",
+      ),
+      obscureText: true,
+      textInputAction: TextInputAction.done,
+      onEditingComplete: _submit,
+    );
+  }
+
+  Widget _buildEmailTextField() {
+    return TextField(
+      controller: _emailController,
+      focusNode: _emailFocusNode,
+      decoration: InputDecoration(
+        labelText: "Email",
+        hintText: "example@example.com",
+      ),
+      autocorrect: false,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onEditingComplete: _emailEditingComplete,
+    );
   }
 
   @override
