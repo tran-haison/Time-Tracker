@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class FirestoreService {
   FirestoreService._();
+
   static final instance = FirestoreService._();
 
   Future<void> setData({String path, Map<String, dynamic> data}) async {
@@ -19,7 +20,7 @@ class FirestoreService {
     return snapshots.map((snapshot) => snapshot.docs
         .map(
           (snapshot) => builder(snapshot.data()),
-    )
+        )
         .toList());
   }
 }

@@ -1,9 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:time_tracker_flutter_course/app/home/jobs/add_job_page.dart';
+import 'package:time_tracker_flutter_course/app/home/jobs/job_list_tile.dart';
 import 'package:time_tracker_flutter_course/app/home/models/job.dart';
 import 'package:time_tracker_flutter_course/common_widgets/show_alert_dialog.dart';
-import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
 
@@ -31,19 +31,6 @@ class JobsPage extends StatelessWidget {
     }
   }
 
-  Future<void> _createJob(BuildContext context) async {
-    try {
-      final database = Provider.of<Database>(context, listen: false);
-      await database.createJob(Job(name: 'Hello', ratePerHour: 5));
-    } on FirebaseException catch (e) {
-      showExceptionAlertDialog(
-        context: context,
-        title: "Operation failed",
-        exception: e,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +52,7 @@ class JobsPage extends StatelessWidget {
       body: _buildContent(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => _createJob(context),
+        onPressed: () => AddJobPage.show(context),
       ),
     );
   }
@@ -77,7 +64,12 @@ class JobsPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final jobs = snapshot.data;
-          final children = jobs.map((job) => Text(job.name)).toList();
+          final children = jobs
+              .map((job) => JobListTile(
+                    job: job,
+                    onTap: () {},
+                  ))
+              .toList();
           return ListView(children: children);
         }
         if (snapshot.hasError) {
