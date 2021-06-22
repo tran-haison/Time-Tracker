@@ -17,8 +17,7 @@ class EditJobPage extends StatefulWidget {
   final Job job;
 
   // Show the AddJobPage dialog instance
-  static Future<void> show(BuildContext context, {Job job}) async {
-    final database = Provider.of<Database>(context, listen: false);
+  static Future<void> show(BuildContext context, {Database database, Job job}) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => EditJobPage(
         database: database,
@@ -75,7 +74,7 @@ class _EditJobPageState extends State<EditJobPage> {
           );
         } else {
           // Create new job
-          final id = widget.job?.id ?? documentIDFromCurrentDate();
+          final id = widget.job?.id ?? documentIdFromCurrentDate();
           final job = Job(id: id, name: _name, ratePerHour: _ratePerHour);
           await widget.database.setJob(job);
           Navigator.of(context).pop();
